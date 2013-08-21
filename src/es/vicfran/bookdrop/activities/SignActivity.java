@@ -50,7 +50,7 @@ public class SignActivity extends Activity implements OnClickListener {
 
 		signButton.setOnClickListener(this);
 
-		dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), Util.APP_KEY, Util.APP_SECRET);
+		dbxAccountManager = Util.getAccountManager(getApplicationContext());
 	}
 
 	@Override
