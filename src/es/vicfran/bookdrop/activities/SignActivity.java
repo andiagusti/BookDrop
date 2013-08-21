@@ -72,7 +72,6 @@ public class SignActivity extends Activity implements OnClickListener {
 		if (savedInstanceState == null) return;
 
 		authenticationError = savedInstanceState.getBoolean(AUTHENTICATION_ERROR_KEY);
-
 		errorTextView.setVisibility(authenticationError ? View.VISIBLE : View.INVISIBLE);
 	}
 

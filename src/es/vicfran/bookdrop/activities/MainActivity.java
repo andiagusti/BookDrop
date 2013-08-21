@@ -25,6 +25,7 @@ public class MainActivity extends Activity implements OnMenuItemClickListener, D
 
 	private DbxAccountManager dbxAccountManager;
 
+	// Progress dialog that shows sign out progress
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -33,7 +34,9 @@ public class MainActivity extends Activity implements OnMenuItemClickListener, D
 		setContentView(R.layout.activity_main);
 
 		dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), Util.APP_KEY, Util.APP_SECRET);
-		dbxAccountManager.addListener(this);
+		if (dbxAccountManager != null) {
+			dbxAccountManager.addListener(this);
+		}
 	}
 
 	@Override
