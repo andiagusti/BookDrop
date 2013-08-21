@@ -2,12 +2,16 @@
 <resources>
 
     <string name="app_name">BookDrop</string>
-    <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    
+
+    <!-- Sign in -->
     <string name="sign">Sign in</string>
     <string name="sign_text">You are not logged into any Dropbox account</string>
-    
+
     <string name="sign_error">Ops! There have been a problem, please try again later</string>
-    
+
+    <!-- Menu -->
+    <string name="action_settings">Settings</string>
+    <string name="action_sign_out">Sign out</string>
+
 </resources>

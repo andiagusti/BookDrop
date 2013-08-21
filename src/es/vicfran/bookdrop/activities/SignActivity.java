@@ -52,19 +52,21 @@ public class SignActivity extends Activity implements OnClickListener {
 
 		dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), Util.APP_KEY, Util.APP_SECRET);
 	}
-	
+
 	@Override
 	public void onResume() {
 		super.onResume();
 
 		// If user has already sign in into Dropbox, go to Main activity and finish
-		if (dbxAccountManager.hasLinkedAccount()) {
-			Intent intent = new Intent(this, MainActivity.class);
-			startActivity(intent);
-			finish();
+		if (dbxAccountManager != null) {
+			if (dbxAccountManager.hasLinkedAccount()) {
+				Intent intent = new Intent(this, MainActivity.class);
+				startActivity(intent);
+				finish();
+			}
 		}
 	}
-	
+
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
@@ -75,7 +77,7 @@ public class SignActivity extends Activity implements OnClickListener {
 
 		errorTextView.setVisibility(authenticationError ? View.VISIBLE : View.INVISIBLE);
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -92,7 +94,7 @@ public class SignActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		if (outState == null) {
@@ -102,13 +104,15 @@ public class SignActivity extends Activity implements OnClickListener {
 		// Store authentication error state
 		outState.putBoolean(AUTHENTICATION_ERROR_KEY, authenticationError);
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch(view.getId()) {
 		case R.id.btn_sign:
-			dbxAccountManager.startLink(this, DBX_REQUEST_CODE);
-			progressBar.setVisibility(View.VISIBLE);
+			if (dbxAccountManager != null) {
+				dbxAccountManager.startLink(this, DBX_REQUEST_CODE);
+				progressBar.setVisibility(View.VISIBLE);	
+			}
 			break;
 	    default:
 	    	break;
