@@ -44,7 +44,7 @@
         android:gravity="center"
         android:visibility="gone"
         android:textColor="@color/lbl_error_red"
-        android:text="@string/sign_error">
+        android:text="@string/service_error">
     </TextView>
     
 

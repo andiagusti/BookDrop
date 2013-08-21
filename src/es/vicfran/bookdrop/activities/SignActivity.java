@@ -25,7 +25,7 @@ import es.vicfran.bookdrop.util.Util;
  */
 public class SignActivity extends Activity implements OnClickListener {
 	
-	// Request code returned by Dropbox authentication activity
+	// Request code to communicate with Dropbox authentication activity
 	private final int DBX_REQUEST_CODE = 0;
 
 	// Key used to maintain authentication error state between Activity life cycle
@@ -60,9 +60,7 @@ public class SignActivity extends Activity implements OnClickListener {
 		// If user has already sign in into Dropbox, go to Main activity and finish
 		if (dbxAccountManager != null) {
 			if (dbxAccountManager.hasLinkedAccount()) {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-				finish();
+				startMainActivityAndFinish();
 			}
 		}
 	}
@@ -89,9 +87,8 @@ public class SignActivity extends Activity implements OnClickListener {
 				authenticationError = true;
 				errorTextView.setVisibility(View.VISIBLE);
 			} else {
-				Intent intent = new Intent(this, MainActivity.class);
-				startActivity(intent);
-				finish();
+				authenticationError = false;
+				startMainActivityAndFinish();
 			}
 		}
 	}
@@ -118,5 +115,12 @@ public class SignActivity extends Activity implements OnClickListener {
 	    default:
 	    	break;
 		}
+	}
+
+	// Because transition to MainActivity happens many times, encapsulate it in one method
+	private void startMainActivityAndFinish() {
+		Intent intent = new Intent(this, MainActivity.class);
+		startActivity(intent);
+		finish();
 	}
 }
