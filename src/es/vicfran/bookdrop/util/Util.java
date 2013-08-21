@@ -2,7 +2,11 @@ package es.vicfran.bookdrop.util;
 
 import android.content.Context;
 
+import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
 
 public final class Util {
 	// Private constructor to prevent against class instantiation
@@ -18,8 +22,21 @@ public final class Util {
 	
 	// Folder of this app on Dropbox account
 	public static final String APP_FOLDER = "ebooks";
+	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT, APP_FOLDER);
 	
+	// Important : Context must be Application context, not Activity context
 	public static DbxAccountManager getAccountManager(Context context) {
 		return DbxAccountManager.getInstance(context, APP_KEY, APP_SECRET);
+	}
+	
+	public static DbxFileSystem getFileSystem(Context context) {
+		DbxAccountManager dbxAccountManager = getAccountManager(context);
+		if (dbxAccountManager == null) return null;
+		DbxAccount dbxAccount = dbxAccountManager.getLinkedAccount();
+		try{
+			return DbxFileSystem.forAccount(dbxAccount);
+		} catch (DbxException.Unauthorized exception) {
+			return null;
+		}
 	}
 }

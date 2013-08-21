@@ -1,9 +1,15 @@
 package es.vicfran.bookdrop.activities;
 
-import android.app.Activity;
+import java.io.IOException;
+import java.util.List;
+
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -11,8 +17,14 @@ import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFile;
+import com.dropbox.sync.android.DbxFileInfo;
+import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.util.FileLoader;
 import es.vicfran.bookdrop.util.Util;
 
 /**
@@ -21,9 +33,10 @@ import es.vicfran.bookdrop.util.Util;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class MainActivity extends Activity implements OnMenuItemClickListener, DbxAccountManager.AccountListener {
+public class MainActivity extends ListActivity implements OnMenuItemClickListener, DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxFileInfo>>{
 
 	private DbxAccountManager dbxAccountManager;
+	private DbxFileSystem dbxFileSystem = null;
 
 	// Progress dialog that shows sign out progress
 	private ProgressDialog progressDialog;
@@ -33,9 +46,15 @@ public class MainActivity extends Activity implements OnMenuItemClickListener, D
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), Util.APP_KEY, Util.APP_SECRET);
+		dbxAccountManager = Util.getAccountManager(getApplicationContext());
+		
 		if (dbxAccountManager != null) {
 			dbxAccountManager.addListener(this);
+			
+			dbxFileSystem = Util.getFileSystem(getApplicationContext());
+			if (dbxFileSystem == null) {
+				Toast.makeText(this, getString(R.string.unauthorized_error), Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -61,11 +80,11 @@ public class MainActivity extends Activity implements OnMenuItemClickListener, D
 			// If there is any Dropbox account linked, unlink it
 			if ((dbxAccountManager != null) && (dbxAccountManager.hasLinkedAccount())){
 					progressDialog = buildSignOutProgressDialog();
-
+					
 					dbxAccountManager.unlink();
 			} else {
 				// At this point, there must be a Dropbox account linked, if not, error
-				Toast.makeText(this, R.string.account_error, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.account_error), Toast.LENGTH_LONG).show();
 			}
 
 			// Anyway, go to sign activity
@@ -81,8 +100,27 @@ public class MainActivity extends Activity implements OnMenuItemClickListener, D
 
 	@Override
 	public void onLinkedAccountChange(DbxAccountManager dbxAccountManager, DbxAccount dbxAccount) {
-		if (progressDialog != null) {
+		if ((progressDialog != null) && (progressDialog.isShowing())) {
 			progressDialog.dismiss();
+		}
+	}
+	
+	/*
+	 * LoaderCallbacks
+	 */
+	@Override
+	public Loader<List<DbxFileInfo>> onCreateLoader(int id, Bundle args) {
+		return new FileLoader(this, dbxAccountManager, Util.APP_PATH);
+	}
+	
+	@Override
+	public void onLoaderReset(Loader<List<DbxFileInfo>> loader) {
+	}
+	
+	@Override
+	public void onLoadFinished(Loader<List<DbxFileInfo>> loader, List<DbxFileInfo> data) {
+		if (loader != null) {
+			// TODO : set list adapter
 		}
 	}
 
