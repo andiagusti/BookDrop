@@ -7,6 +7,12 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
+/**
+ * MainActivtiy class represents main app screen
+ * @author Victor de Francisco Domingo
+ * @date 08/21/2013
+ * @email victor_defran@yahoo.es
+ */
 public class MainActivity extends Activity {
 
 	@Override
