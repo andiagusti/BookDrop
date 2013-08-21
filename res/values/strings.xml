@@ -7,6 +7,7 @@
     <string name="service_error">Ops! There have been a problem, please try again later</string>
     <string name="progress_text">Please, wait a moment</string>
     <string name="account_error">Error : there isn\'t any Dropbox account linked</string>
+    <string name="unauthorized_error">You are not authorized to access folder content</string>
 
     <!-- Sign in -->
     <string name="sign">Sign in</string>
