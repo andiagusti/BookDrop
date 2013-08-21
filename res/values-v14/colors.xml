@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <color name="lbl_error_red">@android:color/holo_red_dark</color> 
+</resources>

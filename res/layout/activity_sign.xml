@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    
+    <TextView
+        android:id="@+id/lbl_sign"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_size"
+        android:gravity="center"
+        android:text="@string/sign_text">
+    </TextView>
+    
+    <Button
+        android:id="@+id/btn_sign"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_size"
+        android:layout_marginTop="@dimen/default_space"
+        android:text="@string/sign">
+    </Button>
+    
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space"
+        android:layout_gravity="center"
+        android:visibility="invisible">
+    </ProgressBar>
+    
+    <TextView
+        android:id="@+id/lbl_error"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/lbl_error_red"
+        android:text="@string/service_error">
+    </TextView>
+    
+
+</LinearLayout>

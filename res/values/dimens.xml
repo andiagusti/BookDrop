@@ -1,0 +1,13 @@
+<resources>
+
+    <!-- Default screen margins (Android Design Guidelines) -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    
+    <!-- Default UI size (Android Design Guidelines) -->
+    <dimen name="default_size">48dp</dimen>
+    
+    <!-- Default space between UI elements (Android Design Guidelines) -->
+    <dimen name="default_space">8dp</dimen>
+
+</resources>
