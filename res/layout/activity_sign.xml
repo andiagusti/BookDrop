@@ -25,5 +25,27 @@
         android:text="@string/sign">
     </Button>
     
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space"
+        android:layout_gravity="center"
+        android:visibility="invisible">
+    </ProgressBar>
+    
+    <TextView
+        android:id="@+id/lbl_error"
+        style="@android:style/TextAppearance.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_space"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/lbl_error_red"
+        android:text="@string/sign_error">
+    </TextView>
+    
 
 </LinearLayout>

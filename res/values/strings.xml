@@ -8,4 +8,6 @@
     <string name="sign">Sign in</string>
     <string name="sign_text">You are not logged into any Dropbox account</string>
     
+    <string name="sign_error">Ops! There have been a problem, please try again later</string>
+    
 </resources>
