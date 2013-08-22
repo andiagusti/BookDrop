@@ -1,5 +1,7 @@
 package es.vicfran.bookdrop.adapters;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -62,23 +64,27 @@ public class BookListAdapter implements ListAdapter {
 	// View holder pattern avoids findViewById() calls for reused convert views.
 	// This is faster than traditional method (~15% faster).
 	static class ViewHolder {
-		public ImageView bookThumbnail;
-		public TextView bookName;
+		public ImageView bookThumbnailImageView;
+		public TextView bookNameTextView;
+		public TextView dateTextView;
 	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.book_list_row, parent, false);
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder.bookThumbnail = (ImageView) convertView.findViewById(R.id.img_thumbnail);
-			viewHolder.bookName = (TextView) convertView.findViewById(R.id.lbl_name);
+			viewHolder.bookThumbnailImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
+			viewHolder.bookNameTextView = (TextView) convertView.findViewById(R.id.lbl_name);
+			viewHolder.dateTextView = (TextView) convertView.findViewById(R.id.lbl_last_modified);
 			convertView.setTag(viewHolder);
 		}
 		
 		DbxFileInfo file = files.get(position);
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
-		viewHolder.bookName.setText(file.path.getName());
+		// TODO : Book thumbnail
+		viewHolder.bookNameTextView.setText(file.path.getName());
+		viewHolder.dateTextView.setText(getDateString(file.modifiedTime));
 		
 		return convertView;
 	}
@@ -114,5 +120,11 @@ public class BookListAdapter implements ListAdapter {
 	@Override
 	public boolean areAllItemsEnabled() {
 		return true;
+	}
+	
+	private String getDateString(Date date) {
+		DateFormat format = DateFormat.getInstance();
+		
+		return format.format(date);
 	}
 }

@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/default_size"
     android:orientation="vertical" 
-    android:padding="@dimen/default_space"
     android:clickable="true">
     
     <ImageView
@@ -11,15 +10,28 @@
         android:layout_width="@dimen/default_size"
         android:layout_height="@dimen/default_size"
         android:layout_alignParentLeft="true"
-        android:contentDescription="@string/img_content_description">
+        android:contentDescription="@string/img_content_description"
+        android:src="@drawable/ic_launcher">
     </ImageView>
     
     <TextView
         android:id="@+id/lbl_name"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_size"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/img_thumbnail"
-        android:gravity="center">
+        android:gravity="center_vertical|left"
+        android:textStyle="bold">
+    </TextView>
+    
+    <TextView
+        android:id="@+id/lbl_last_modified"
+        style="@android:style/TextAppearance.Small"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/lbl_name"
+        android:layout_toRightOf="@id/img_thumbnail"
+        android:gravity="center_vertical">
     </TextView>
 
 </RelativeLayout>

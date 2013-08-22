@@ -19,6 +19,7 @@
     
     <!-- Book list -->
     <string name="empty_list">No eBooks found</string>
+    <string name="img_content_description">Book thumbnail</string>
 
 
 </resources>
