@@ -1,5 +1,6 @@
 package es.vicfran.bookdrop.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -80,7 +81,7 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		
 		if (dbxFileSystem != null) {
 			try {
-				files = dbxFileSystem.listFolder(dbxPath);
+				files = getEpubFiles(dbxFileSystem.listFolder(dbxPath));
 			} catch (DbxException exception) {}
 		}
 		
@@ -100,6 +101,20 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		}
 	}
 	
+	/*
+	 * This method takes a list of DbxFileInfos and selects those
+	 * with epub extension
+	 */
+	private List<DbxFileInfo> getEpubFiles(List<DbxFileInfo> files) {
+		List<DbxFileInfo> epubs = new ArrayList<DbxFileInfo>();
+		for(DbxFileInfo file : files) {
+			if (Util.getFileExtension(file.path.getName()).equals(Util.EBOOK_EXTENSION)) {
+				epubs.add(file);
+			}
+		}
+		
+		return epubs;
+	}
 	
 	/*
 	 * Dpx listeners

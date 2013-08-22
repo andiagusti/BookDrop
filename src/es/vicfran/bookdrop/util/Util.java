@@ -24,6 +24,8 @@ public final class Util {
 	public static final String APP_FOLDER = "ebooks";
 	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT, APP_FOLDER);
 	
+	public static final String EBOOK_EXTENSION = "epub";
+	
 	public static DbxAccountManager getAccountManager(Context context) {
 		return DbxAccountManager.getInstance(context.getApplicationContext(), APP_KEY, APP_SECRET);
 	}
@@ -40,5 +42,16 @@ public final class Util {
 			}
 		}
 		return null;
+	}
+	
+	
+	// Assume that file name is in the form
+	// 		filename.*
+	public static String getFileName(String file) {
+		return file.split("\\.", 2)[0];
+	}
+	
+	public static String getFileExtension(String file) {
+		return file.split("\\.", 2)[1];
 	}
 }
