@@ -32,10 +32,13 @@ public final class Util {
 		DbxAccountManager dbxAccountManager = getAccountManager(context);
 		if (dbxAccountManager == null) return null;
 		DbxAccount dbxAccount = dbxAccountManager.getLinkedAccount();
-		try{
-			return DbxFileSystem.forAccount(dbxAccount);
-		} catch (DbxException.Unauthorized exception) {
-			return null;
+		if (dbxAccount != null) {
+			try{
+				return DbxFileSystem.forAccount(dbxAccount);
+			} catch (DbxException.Unauthorized exception) {
+				return null;
+			}
 		}
+		return null;
 	}
 }
