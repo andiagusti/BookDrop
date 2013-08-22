@@ -81,7 +81,7 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		
 		if (dbxFileSystem != null) {
 			try {
-				files = getEpubFiles(dbxFileSystem.listFolder(dbxPath));
+				files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
 			} catch (DbxException exception) {}
 		}
 		
@@ -99,21 +99,6 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		if (isStarted()) {
 			super.deliverResult(files);
 		}
-	}
-	
-	/*
-	 * This method takes a list of DbxFileInfos and selects those
-	 * with epub extension
-	 */
-	private List<DbxFileInfo> getEpubFiles(List<DbxFileInfo> files) {
-		List<DbxFileInfo> epubs = new ArrayList<DbxFileInfo>();
-		for(DbxFileInfo file : files) {
-			if (Util.getFileExtension(file.path.getName()).equals(Util.EBOOK_EXTENSION)) {
-				epubs.add(file);
-			}
-		}
-		
-		return epubs;
 	}
 	
 	/*

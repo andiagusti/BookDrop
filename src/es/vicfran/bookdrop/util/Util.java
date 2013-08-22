@@ -1,10 +1,14 @@
 package es.vicfran.bookdrop.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Context;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 
@@ -53,5 +57,20 @@ public final class Util {
 	
 	public static String getFileExtension(String file) {
 		return file.split("\\.", 2)[1];
+	}
+	
+	/*
+	 * This method takes a list of DbxFileInfos and selects those
+	 * with |extension| extension
+	 */
+	public static List<DbxFileInfo> getFiles(List<DbxFileInfo> files, String extension) {
+		List<DbxFileInfo> epubs = new ArrayList<DbxFileInfo>();
+		for(DbxFileInfo file : files) {
+			if (Util.getFileExtension(file.path.getName()).equals(extension)) {
+				epubs.add(file);
+			}
+		}
+		
+		return epubs;
 	}
 }
