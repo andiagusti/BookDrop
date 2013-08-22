@@ -186,7 +186,11 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		progressBar.setVisibility(View.GONE);
 		
 		if (data.isEmpty()) {
-			emptyView.setVisibility(View.VISIBLE);
+			bookListView.setVisibility(View.GONE)
+;			emptyView.setVisibility(View.VISIBLE);
+		} else {
+			bookListView.setVisibility(View.VISIBLE);
+			emptyView.setVisibility(View.GONE);
 		}
 		
 		if (loader != null) {

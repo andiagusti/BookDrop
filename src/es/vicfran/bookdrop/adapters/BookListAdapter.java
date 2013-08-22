@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.dropbox.sync.android.DbxFileInfo;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.util.Util;
 
 /**
  * BookListAdapter is the base adapter for the book list
@@ -83,7 +84,7 @@ public class BookListAdapter implements ListAdapter {
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
-		viewHolder.bookNameTextView.setText(file.path.getName());
+		viewHolder.bookNameTextView.setText(Util.getFileName(file.path.getName()));
 		viewHolder.dateTextView.setText(getDateString(file.modifiedTime));
 		
 		return convertView;
