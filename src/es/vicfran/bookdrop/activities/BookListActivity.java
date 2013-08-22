@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import es.vicfran.bookdrop.R;
 
 /**
- * MainActivtiy class represents main app screen
+ * BookListActivity class represents main app screen
  * @author Victor de Francisco Domingo
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
