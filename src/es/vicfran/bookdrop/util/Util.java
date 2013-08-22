@@ -64,13 +64,13 @@ public final class Util {
 	 * with |extension| extension
 	 */
 	public static List<DbxFileInfo> getFiles(List<DbxFileInfo> files, String extension) {
-		List<DbxFileInfo> epubs = new ArrayList<DbxFileInfo>();
+		List<DbxFileInfo> selected = new ArrayList<DbxFileInfo>();
 		for(DbxFileInfo file : files) {
 			if (Util.getFileExtension(file.path.getName()).equals(extension)) {
-				epubs.add(file);
+				selected.add(file);
 			}
 		}
 		
-		return epubs;
+		return selected;
 	}
 }
