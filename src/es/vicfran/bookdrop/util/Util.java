@@ -24,9 +24,8 @@ public final class Util {
 	public static final String APP_FOLDER = "ebooks";
 	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT, APP_FOLDER);
 	
-	// Important : Context must be Application context, not Activity context
 	public static DbxAccountManager getAccountManager(Context context) {
-		return DbxAccountManager.getInstance(context, APP_KEY, APP_SECRET);
+		return DbxAccountManager.getInstance(context.getApplicationContext(), APP_KEY, APP_SECRET);
 	}
 	
 	public static DbxFileSystem getFileSystem(Context context) {
