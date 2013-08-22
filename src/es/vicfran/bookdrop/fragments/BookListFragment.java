@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +17,8 @@ import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
@@ -27,6 +28,7 @@ import com.dropbox.sync.android.DbxFileSystem;
 
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.activities.SignActivity;
+import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.util.FolderContentLoader;
 import es.vicfran.bookdrop.util.Util;
 
@@ -43,7 +45,9 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	private final int LOADER_ID = 0;
 	
+	private ProgressBar progressBar;
 	private ListView bookListView;
+	private TextView emptyView;
 	
 	private DbxAccountManager dbxAccountManager;
 	private DbxFileSystem dbxFileSystem;
@@ -63,12 +67,17 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
+		progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 		bookListView = (ListView) view.findViewById(android.R.id.list);
+		emptyView = (TextView) view.findViewById(android.R.id.empty);
 	}
 	
 	@Override
 	public void onStart() {
 		super.onStart();
+		
+		progressBar.setVisibility(View.VISIBLE);
+		emptyView.setVisibility(View.GONE);
 		
 		// Ensure that loader is initialized and active at activity start
 		// If any loader already exists, use it
@@ -174,8 +183,14 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	@Override
 	public void onLoadFinished(Loader<List<DbxFileInfo>> loader, List<DbxFileInfo> data) {
+		progressBar.setVisibility(View.GONE);
+		
+		if (data.isEmpty()) {
+			emptyView.setVisibility(View.VISIBLE);
+		}
+		
 		if (loader != null) {
-			// TODO : set list adapter
+			bookListView.setAdapter(new BookListAdapter(getActivity(), data));
 		}
 	}
 }
