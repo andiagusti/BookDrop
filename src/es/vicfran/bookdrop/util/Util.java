@@ -1,9 +1,76 @@
 package es.vicfran.bookdrop.util;
 
-public class Util {
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Context;
+
+import com.dropbox.sync.android.DbxAccount;
+import com.dropbox.sync.android.DbxAccountManager;
+import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFileInfo;
+import com.dropbox.sync.android.DbxFileSystem;
+import com.dropbox.sync.android.DbxPath;
+
+public final class Util {
+	// Private constructor to prevent against class instantiation
+	private Util() {}
+	
 	// Be aware that it isn't a good way to store this info, 
 	// because it's sensitive data and it must be stored in a more
 	// secure way, for example obfuscated or encrypted.
-	public static final String APP_KEY = "46ed2n6l0rypk8t";
-	public static final String APP_SECRET = "quywwtzdqa9nyi0";
+	//
+	// For more security, this data is private to prevent its use outside this class
+	private static final String APP_KEY = "8z1wqhkohai8aoz";
+	private static final String APP_SECRET = "ny1yoknc71nkwfn";
+	
+	// Folder of this app on Dropbox account
+	public static final String APP_FOLDER = "ebooks";
+	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT, APP_FOLDER);
+	
+	public static final String EBOOK_EXTENSION = "epub";
+	
+	public static DbxAccountManager getAccountManager(Context context) {
+		return DbxAccountManager.getInstance(context.getApplicationContext(), APP_KEY, APP_SECRET);
+	}
+	
+	public static DbxFileSystem getFileSystem(Context context) {
+		DbxAccountManager dbxAccountManager = getAccountManager(context);
+		if (dbxAccountManager == null) return null;
+		DbxAccount dbxAccount = dbxAccountManager.getLinkedAccount();
+		if (dbxAccount != null) {
+			try{
+				return DbxFileSystem.forAccount(dbxAccount);
+			} catch (DbxException.Unauthorized exception) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
+	
+	// Assume that file name is in the form
+	// 		filename.*
+	public static String getFileName(String file) {
+		return file.split("\\.", 2)[0];
+	}
+	
+	public static String getFileExtension(String file) {
+		return file.split("\\.", 2)[1];
+	}
+	
+	/*
+	 * This method takes a list of DbxFileInfos and selects those
+	 * with |extension| extension
+	 */
+	public static List<DbxFileInfo> getFiles(List<DbxFileInfo> files, String extension) {
+		List<DbxFileInfo> selected = new ArrayList<DbxFileInfo>();
+		for(DbxFileInfo file : files) {
+			if (Util.getFileExtension(file.path.getName()).equals(extension)) {
+				selected.add(file);
+			}
+		}
+		
+		return selected;
+	}
 }
