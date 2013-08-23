@@ -15,6 +15,7 @@ import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.util.FolderContentLoader;
 import es.vicfran.bookdrop.util.Util;
 
 /**
@@ -25,6 +26,8 @@ import es.vicfran.bookdrop.util.Util;
  */
 public class SignActivity extends Activity implements OnClickListener {
 	
+	public static final String TAG = SignActivity.class.getName();
+
 	// Request code to communicate with Dropbox authentication activity
 	private final int DBX_REQUEST_CODE = 0;
 
@@ -50,7 +53,7 @@ public class SignActivity extends Activity implements OnClickListener {
 
 		signButton.setOnClickListener(this);
 
-		dbxAccountManager = DbxAccountManager.getInstance(getApplicationContext(), Util.APP_KEY, Util.APP_SECRET);
+		dbxAccountManager = Util.getAccountManager(getApplicationContext());
 	}
 
 	@Override
@@ -118,7 +121,7 @@ public class SignActivity extends Activity implements OnClickListener {
 
 	// Because transition to MainActivity happens many times, encapsulate it in one method
 	private void startMainActivityAndFinish() {
-		Intent intent = new Intent(this, MainActivity.class);
+		Intent intent = new Intent(this, BookListActivity.class);
 		startActivity(intent);
 		finish();
 	}
