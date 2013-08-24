@@ -41,6 +41,12 @@ import es.vicfran.bookdrop.util.Util;
 public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxFileInfo>>, 
 			OnMenuItemClickListener {
 	
+	// Interface for communication with holder activity
+	// Holder activity must implement it
+	public interface BookListCallbacks {
+		public void onBookDetail(DbxFileInfo dbxFileInfo);
+	}
+	
 	public static final String TAG = BookListFragment.class.getName();
 	
 	private final int LOADER_ID = 0;
@@ -54,11 +60,6 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	// Progress dialog that shows sign out progress
 	private ProgressDialog progressDialog;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,6 +88,12 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		
+		if (!(activity instanceof BookListCallbacks)) {
+			// If holder activity doesn't implement callback interface, illegal state exception
+			throw new IllegalStateException("Holder activity must implement BookListCallbacks");
+		}
+		
 		setHasOptionsMenu(true);
 				
 		dbxAccountManager = Util.getAccountManager(activity);
