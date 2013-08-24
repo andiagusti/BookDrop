@@ -13,11 +13,9 @@ public class BookDetailActivity extends FragmentActivity {
 		setContentView(R.layout.activity_book_detail);
 		
 		Bundle extras = getIntent().getExtras();
-		
-		String path = extras.getString(BookDetailFragment.ARG_FILE_INFO);
-		
+				
 		getSupportFragmentManager().beginTransaction()
-		.add(R.id.book_detail_container, BookDetailFragment.buildBookDetailFragment(extras.getString(BookDetailFragment.ARG_FILE_INFO)))
+		.add(R.id.book_detail, BookDetailFragment.buildBookDetailFragment(extras.getString(BookDetailFragment.ARG_FILE_INFO)))
 		.commit();
 	}
 }

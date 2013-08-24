@@ -8,7 +8,6 @@ import com.dropbox.sync.android.DbxFileInfo;
 
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.fragments.BookDetailFragment;
-import es.vicfran.bookdrop.fragments.BookListFragment;
 import es.vicfran.bookdrop.fragments.BookListFragment.BookListCallbacks;
 
 /**
@@ -29,11 +28,11 @@ public class BookActivity extends FragmentActivity implements BookListCallbacks 
 	 * CALLBACKS
 	 */
 	public void onBookDetail(DbxFileInfo dbxFileInfo) {
-		if (findViewById(R.id.book_detail) != null) {
+		if (findViewById(R.id.book_detail_fragment) != null) {
 			// Activity has 2 fragments (list-detail), screen with almost 600dp
 			// We can show book list and details of book selected in the same activity
 			getSupportFragmentManager().beginTransaction()
-			.replace(R.id.book_detail, BookDetailFragment.buildBookDetailFragment((dbxFileInfo != null) ? dbxFileInfo.path.toString() : ""))
+			.replace(R.id.book_detail_fragment, BookDetailFragment.buildBookDetailFragment((dbxFileInfo != null) ? dbxFileInfo.path.toString() : ""))
 			.commit();
 		} else {
 			// Activity has only one fragment (list) 

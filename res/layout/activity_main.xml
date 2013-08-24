@@ -4,5 +4,5 @@
     android:id="@+id/book_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    class="es.vicfran.bookdrop.fragments.BookListFragment">
+    android:name="es.vicfran.bookdrop.fragments.BookListFragment">
 </fragment>
