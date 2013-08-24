@@ -6,8 +6,10 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
@@ -26,14 +28,24 @@ import es.vicfran.bookdrop.util.Util;
  */
 public class BookListAdapter implements ListAdapter {
 	
+	public interface BookItemListCallbacks {
+		public void onBookItemClick(DbxFileInfo dbxFileInfo);
+	}
+	
 	private List<DbxFileInfo> files;
 	
 	private LayoutInflater inflater;
 	
-	public BookListAdapter(Context context, List<DbxFileInfo> files) {
+	private BookItemListCallbacks callbacks;
+	
+	public BookListAdapter(Context context, Fragment fragment, List<DbxFileInfo> files) {
 		this.files = files;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		if (fragment instanceof BookItemListCallbacks) {
+			callbacks = (BookItemListCallbacks) fragment;
+		}
 	}
 	
 	@Override
@@ -80,12 +92,21 @@ public class BookListAdapter implements ListAdapter {
 			convertView.setTag(viewHolder);
 		}
 		
-		DbxFileInfo file = files.get(position);
+		final DbxFileInfo file = files.get(position);
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
 		viewHolder.bookNameTextView.setText(Util.getFileName(file.path.getName()));
 		viewHolder.dateTextView.setText(getDateString(file.modifiedTime));
+		
+		if (callbacks != null) {
+			convertView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					callbacks.onBookItemClick(file);
+				}
+			});
+		}
 		
 		return convertView;
 	}

@@ -5,9 +5,9 @@
     android:orientation="vertical" >
     
     <TextView
+        android:id="@+id/lbl_path"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hola este es el fragment para los detalles del libro">
+        android:layout_height="match_parent">
     </TextView>
     
 

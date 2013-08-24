@@ -29,6 +29,7 @@ import com.dropbox.sync.android.DbxFileSystem;
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.activities.SignActivity;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
+import es.vicfran.bookdrop.adapters.BookListAdapter.BookItemListCallbacks;
 import es.vicfran.bookdrop.util.FolderContentLoader;
 import es.vicfran.bookdrop.util.Util;
 
@@ -39,7 +40,7 @@ import es.vicfran.bookdrop.util.Util;
  * @email victor_defran@yahoo.es
  */
 public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxFileInfo>>, 
-			OnMenuItemClickListener {
+			OnMenuItemClickListener, BookItemListCallbacks {
 	
 	// Interface for communication with holder activity
 	// Holder activity must implement it
@@ -60,6 +61,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	// Progress dialog that shows sign out progress
 	private ProgressDialog progressDialog;
+	
+	private BookListCallbacks callbacks;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,6 +97,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 			throw new IllegalStateException("Holder activity must implement BookListCallbacks");
 		}
 		
+		this.callbacks = (BookListCallbacks) activity;
+		
 		setHasOptionsMenu(true);
 				
 		dbxAccountManager = Util.getAccountManager(activity);
@@ -109,7 +114,7 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	}
 	
 	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {		
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {	
 		inflater.inflate(R.menu.main, menu);
 		
 		if (menu != null) {
@@ -201,7 +206,12 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		}
 		
 		if (loader != null) {
-			bookListView.setAdapter(new BookListAdapter(getActivity(), data));
+			bookListView.setAdapter(new BookListAdapter(getActivity(), this, data));
 		}
+	}
+	
+	@Override
+	public void onBookItemClick(DbxFileInfo dbxFileInfo) {
+		callbacks.onBookDetail(dbxFileInfo);
 	}
 }

@@ -121,7 +121,7 @@ public class SignActivity extends Activity implements OnClickListener {
 
 	// Because transition to MainActivity happens many times, encapsulate it in one method
 	private void startMainActivityAndFinish() {
-		Intent intent = new Intent(this, BookListActivity.class);
+		Intent intent = new Intent(this, BookActivity.class);
 		startActivity(intent);
 		finish();
 	}
