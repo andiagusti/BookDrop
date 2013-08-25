@@ -2,6 +2,7 @@ package es.vicfran.bookdrop.fragments;
 
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -39,13 +40,13 @@ import es.vicfran.bookdrop.util.Util;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxFileInfo>>, 
+public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<Book>>, 
 			OnMenuItemClickListener, BookItemListCallbacks {
 	
 	// Interface for communication with holder activity
 	// Holder activity must implement it
 	public interface BookListCallbacks {
-		public void onBookDetail(DbxFileInfo dbxFileInfo);
+		public void onBookDetail(int bookIndex);
 	}
 	
 	public static final String TAG = BookListFragment.class.getName();
@@ -63,6 +64,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	private ProgressDialog progressDialog;
 	
 	private BookListCallbacks callbacks;
+	
+	private BookListAdapter bookListAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -119,6 +122,7 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		
 		if (menu != null) {
 			menu.findItem(R.id.action_refresh).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_date_sort).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_settings).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_sign_out).setOnMenuItemClickListener(this);
 		}
@@ -129,6 +133,11 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		switch(menuItem.getItemId()) {
 		case R.id.action_refresh:
 			// TODO
+			break;
+		case R.id.action_date_sort:
+			if (bookListAdapter != null) {
+				bookListAdapter.dateSort();
+			}
 			break;
 		case R.id.action_settings:
 			// TODO
@@ -185,33 +194,34 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	// LoaderCallbacks
 	@Override
-	public Loader<List<DbxFileInfo>> onCreateLoader(int id, Bundle args) {
+	public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
 		return new FolderContentLoader(getActivity(), dbxAccountManager, Util.APP_PATH);
 	}
 	
 	@Override
-	public void onLoaderReset(Loader<List<DbxFileInfo>> loader) {
+	public void onLoaderReset(Loader<List<Book>> loader) {
 	}
 	
 	@Override
-	public void onLoadFinished(Loader<List<DbxFileInfo>> loader, List<DbxFileInfo> data) {
+	public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
 		progressBar.setVisibility(View.GONE);
 		
 		if (data.isEmpty()) {
-			bookListView.setVisibility(View.GONE)
-;			emptyView.setVisibility(View.VISIBLE);
+			bookListView.setVisibility(View.GONE);			
+			emptyView.setVisibility(View.VISIBLE);
 		} else {
 			bookListView.setVisibility(View.VISIBLE);
 			emptyView.setVisibility(View.GONE);
 		}
 		
 		if (loader != null) {
-			bookListView.setAdapter(new BookListAdapter(getActivity(), this, data));
+			bookListAdapter = new BookListAdapter(getActivity(), this, data);
+			bookListView.setAdapter(bookListAdapter);
 		}
 	}
 	
 	@Override
-	public void onBookItemClick(DbxFileInfo dbxFileInfo) {
-		callbacks.onBookDetail(dbxFileInfo);
+	public void onBookItemClick(int bookId) {
+		callbacks.onBookDetail(bookId);
 	}
 }

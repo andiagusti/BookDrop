@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
@@ -29,17 +30,18 @@ import es.vicfran.bookdrop.util.Util;
 public class BookListAdapter implements ListAdapter {
 	
 	public interface BookItemListCallbacks {
-		public void onBookItemClick(DbxFileInfo dbxFileInfo);
+		public void onBookItemClick(int bookId);
 	}
 	
-	private List<DbxFileInfo> files;
+	// Source data with books
+	private static List<Book> books;
 	
 	private LayoutInflater inflater;
 	
 	private BookItemListCallbacks callbacks;
 	
-	public BookListAdapter(Context context, Fragment fragment, List<DbxFileInfo> files) {
-		this.files = files;
+	public BookListAdapter(Context context, Fragment fragment, List<Book> books) {
+		this.books = books;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -50,12 +52,12 @@ public class BookListAdapter implements ListAdapter {
 	
 	@Override
 	public int getCount() {
-		return files.size();
+		return books.size();
 	}
 	
 	@Override
-	public DbxFileInfo getItem(int position) {
-		return files.get(position);
+	public Book getItem(int position) {
+		return books.get(position);
 	}
 	
 	@Override
@@ -82,7 +84,7 @@ public class BookListAdapter implements ListAdapter {
 		public TextView dateTextView;
 	}
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.book_list_row, parent, false);
 			ViewHolder viewHolder = new ViewHolder();
@@ -92,18 +94,18 @@ public class BookListAdapter implements ListAdapter {
 			convertView.setTag(viewHolder);
 		}
 		
-		final DbxFileInfo file = files.get(position);
+		final Book book = books.get(position);
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
-		viewHolder.bookNameTextView.setText(Util.getFileName(file.path.getName()));
-		viewHolder.dateTextView.setText(getDateString(file.modifiedTime));
+		viewHolder.bookNameTextView.setText(book.getMetadata().getFirstTitle());
+		//viewHolder.dateTextView.setText(getDateString(book.getMetadata().getDates().get(0));
 		
 		if (callbacks != null) {
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					callbacks.onBookItemClick(file);
+					callbacks.onBookItemClick(position);
 				}
 			});
 		}
@@ -136,7 +138,7 @@ public class BookListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return files.isEmpty();
+		return books.isEmpty();
 	}
 
 	@Override
@@ -148,5 +150,13 @@ public class BookListAdapter implements ListAdapter {
 		DateFormat format = DateFormat.getInstance();
 		
 		return format.format(date);
+	}
+	
+	public void dateSort() {
+		
+	}
+	
+	public static List<Book> getBooks() {
+		return books;
 	}
 }

@@ -1,5 +1,6 @@
 package es.vicfran.bookdrop.fragments;
 
+import nl.siegmann.epublib.domain.Book;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.dropbox.sync.android.DbxPath;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.adapters.BookListAdapter;
 
 public class BookDetailFragment extends Fragment {
 	
@@ -17,16 +19,16 @@ public class BookDetailFragment extends Fragment {
 	
 	public static String ARG_FILE_INFO = "es.vicfran.bookdrop.fragments:file_info";
 	
-	private DbxPath dbxPath;
+	private Book book;
 	
-	public static BookDetailFragment buildBookDetailFragment(String path) {
+	public static BookDetailFragment buildBookDetailFragment(int bookId) {
 		BookDetailFragment bookDetailFragment = new BookDetailFragment();
 		
 		Bundle args = new Bundle();
 		
 		// DbxFileInfo doesn't implement Parcelable interface, so we can't
 		// put it inside arguments bundle, path info is enough.
-		args.putString(ARG_FILE_INFO, path);
+		args.putInt(ARG_FILE_INFO, bookId);
 		
 		bookDetailFragment.setArguments(args);
 		
@@ -49,14 +51,10 @@ public class BookDetailFragment extends Fragment {
 		Bundle args = getArguments();
 		if (args != null) {
 			try {
-				dbxPath = new DbxPath(args.getString(ARG_FILE_INFO));
+				book = BookListAdapter.getBooks().get(args.getInt(BookDetailFragment.ARG_FILE_INFO));
 			} catch (DbxPath.InvalidPathException e) {
-				dbxPath = null;
+				book = null;
 			}
-		}
-		
-		if (pathTextView != null) {
-			pathTextView.setText((dbxPath != null) ? dbxPath.toString() : "");
 		}
 	}
 }

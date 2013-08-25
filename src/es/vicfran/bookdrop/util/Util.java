@@ -1,13 +1,17 @@
 package es.vicfran.bookdrop.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.epub.EpubReader;
 import android.content.Context;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
+import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
@@ -72,5 +76,39 @@ public final class Util {
 		}
 		
 		return selected;
+	}
+	
+	/*
+	 * Gets Book list from DbxFileInfo files
+	 */
+	public static List<Book> getBooks(Context context, List<DbxFileInfo> files) {
+		List<Book> books = new ArrayList<Book>(files.size());
+		
+		for (DbxFileInfo dbxFileInfo : files) {
+			books.add(getBook(context, dbxFileInfo));
+		}
+		
+		return books;
+	}
+	
+	/*
+	 * Gets Book from DbxFileInfo
+	 */
+	public static Book getBook(Context context, DbxFileInfo dbxFileInfo) {
+		DbxFileSystem dbxFileSystem = getFileSystem(context);
+		if (dbxFileSystem == null) return null;
+		
+		Book book = null;
+		try {
+			DbxFile dbxFile = dbxFileSystem.open(dbxFileInfo.path);
+			EpubReader reader = new EpubReader();
+			book = reader.readEpub(dbxFile.getReadStream());
+		} catch (DbxException e) {
+			return  null;
+		} catch (IOException e) {
+			return null;
+		}
+		
+		return book;
 	}
 }

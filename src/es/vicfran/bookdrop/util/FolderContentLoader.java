@@ -1,8 +1,8 @@
 package es.vicfran.bookdrop.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
@@ -18,14 +18,14 @@ import com.dropbox.sync.android.DbxPath;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
+public class FolderContentLoader extends AsyncTaskLoader<List<Book>> {
 	
 	public static final String TAG = FolderContentLoader.class.getName();
 	
 	private DbxAccountManager dbxAccountManager;
 	// Folder to list its content path
 	private DbxPath dbxPath;
-	private List<DbxFileInfo> files = null;
+	private List<Book> books = null;
 	
 	private Context context;
 	
@@ -41,8 +41,8 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 	@Override
 	protected void onStartLoading() {
 		// If there are results, deliver them
-		if (files != null) {
-			deliverResult(files);
+		if (books != null) {
+			deliverResult(books);
 		}
 		
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
@@ -52,7 +52,7 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		}
 		
 		// If content has changed or there aren't results, force asynchronous load
-		if (takeContentChanged() || files == null) {
+		if (takeContentChanged() || books == null) {
 			forceLoad();
 		}
 	}
@@ -71,30 +71,34 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 	
 	@Override
 	protected void onReset() {
-		files = null;
+		books = null;
 		onStopLoading();
 	}
 	
 	@Override
-	public List<DbxFileInfo> loadInBackground() {
+	public List<Book> loadInBackground() {
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
 		
 		if (dbxFileSystem != null) {
 			try {
-				files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
-			} catch (DbxException exception) {}
+				List<DbxFileInfo> files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
+				// Get book instances from dropbox file instances
+				books = Util.getBooks(context, files);
+			} catch (DbxException exception) {
+				books = null;
+			}
 		}
 		
-		return files;
+		return books;
 	}
 	
 	@Override
-	public void deliverResult(List<DbxFileInfo> files) {
+	public void deliverResult(List<Book> files) {
 		if (isReset()) {
 			return;
 		}
 		
-		this.files = files;
+		this.books = files;
 		
 		if (isStarted()) {
 			super.deliverResult(files);
