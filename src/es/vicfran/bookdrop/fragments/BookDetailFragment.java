@@ -1,8 +1,12 @@
 package es.vicfran.bookdrop.fragments;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
-import android.content.Context;
+import nl.siegmann.epublib.domain.Author;
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.epub.EpubReader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
@@ -23,14 +26,15 @@ import es.vicfran.bookdrop.util.Util;
 
 public class BookDetailFragment extends Fragment {
 	
-	private TextView pathTextView;
-	private ImageView thumbnailImageView;
+	private TextView titleTextView;
+	private TextView authorTextView;
+	private ImageView coverImageView;
 	
 	public static String ARG_FILE_INFO = "es.vicfran.bookdrop.fragments:file_info";
 	
 	private DbxPath dbxPath;
-	private DbxFile thumb = null;
-	private Drawable thumbDrawable = null;
+	private DbxFile file;
+	private Book book = null;
 	
 	public static BookDetailFragment buildBookDetailFragment(String path) {
 		BookDetailFragment bookDetailFragment = new BookDetailFragment();
@@ -59,29 +63,26 @@ public class BookDetailFragment extends Fragment {
 			}
 		}
 		
-		Context context = getActivity();
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(getActivity());
 		
-		if (dbxFileSystem != null) {
-			try{
-				thumb = dbxFileSystem.openThumbnail(dbxPath, DbxFileSystem.ThumbSize.M, DbxFileSystem.ThumbFormat.PNG);
-			} catch (DbxException.NotFound e) {
-				Toast.makeText(context, context.getString(R.string.thumb_not_found_error), Toast.LENGTH_SHORT).show();
-			} catch (DbxException.InvalidParameter e) {
-				Toast.makeText(context, context.getString(R.string.thumb_not_file_error), Toast.LENGTH_SHORT).show();
-			} catch (DbxException.NoThumb e) {
-				Toast.makeText(context, context.getString(R.string.thumb_not_available_error), Toast.LENGTH_SHORT).show();
-			} catch (DbxException e) {
-				Toast.makeText(context, context.getString(R.string.thumb_error), Toast.LENGTH_SHORT).show();
-			}
-		}
+		try {
+			file = dbxFileSystem.open(dbxPath);
+			InputStream is = file.getReadStream();
+			EpubReader e = new EpubReader();
+			book = e.readEpub(is);
+		} catch (DbxException e) {
+			
+		} catch (IOException e) {
+			
+		}		
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
 		
-		if ((thumb != null) && (thumb.isThumb())) {
-			try {
-				thumbDrawable = Drawable.createFromStream(thumb.getReadStream(), "");
-			} catch (IOException e) {
-				thumbDrawable = null;
-			}
+		if (file != null) {
+			file.close();
 		}
 	}
 	
@@ -92,12 +93,34 @@ public class BookDetailFragment extends Fragment {
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		pathTextView = (TextView) view.findViewById(R.id.lbl_path);
-		thumbnailImageView = (ImageView) view.findViewById(R.id.thumbnail);
+		titleTextView = (TextView) view.findViewById(R.id.lbl_title);
+		authorTextView = (TextView) view.findViewById(R.id.lbl_author);
+		coverImageView = (ImageView) view.findViewById(R.id.img_book_cover);
 		
-		pathTextView.setText((dbxPath != null) ? dbxPath.toString() : "");
-		if (thumbDrawable != null) {
-			thumbnailImageView.setImageDrawable(thumbDrawable);
+		if (book != null) {
+			titleTextView.setText(book.getMetadata().getFirstTitle());
+			authorTextView.setText(parseAuthors(book.getMetadata().getAuthors()));
+			
+			Drawable thumbDrawable;
+			try {
+				thumbDrawable = Drawable.createFromStream(book.getCoverImage().getInputStream(), "");
+			} catch (IOException e) {
+				thumbDrawable = null;
+			}
+			
+			coverImageView.setImageDrawable((thumbDrawable != null) ? 
+												thumbDrawable : 
+												getActivity().getResources().getDrawable(R.drawable.ic_launcher)); 
 		}
+	}
+	
+	private String parseAuthors(List<Author> authors) {
+		String authorsString = "";
+		
+		for(Author author : authors) {
+			authorsString = authorsString.concat(author + ", ");
+		}
+		
+		return authorsString.substring(0, authorsString.length() - 2);
 	}
 }
