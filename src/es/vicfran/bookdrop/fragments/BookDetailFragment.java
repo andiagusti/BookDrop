@@ -6,6 +6,7 @@ import java.util.List;
 
 import nl.siegmann.epublib.domain.Author;
 import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.Resource;
 import nl.siegmann.epublib.epub.EpubReader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class BookDetailFragment extends Fragment {
 	private DbxPath dbxPath;
 	private DbxFile file;
 	private Book book = null;
-	
+		
 	public static BookDetailFragment buildBookDetailFragment(String path) {
 		BookDetailFragment bookDetailFragment = new BookDetailFragment();
 		
@@ -64,17 +65,19 @@ public class BookDetailFragment extends Fragment {
 		}
 		
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(getActivity());
-		
-		try {
-			file = dbxFileSystem.open(dbxPath);
-			InputStream is = file.getReadStream();
-			EpubReader e = new EpubReader();
-			book = e.readEpub(is);
-		} catch (DbxException e) {
 			
-		} catch (IOException e) {
-			
-		}		
+		if (dbxFileSystem != null) {
+			try {
+				file = dbxFileSystem.open(dbxPath);
+				InputStream is = file.getReadStream();
+				EpubReader e = new EpubReader();
+				book = e.readEpub(is);
+			} catch (DbxException e) {
+				book = null;
+			} catch (IOException e) {
+				book = null;
+			}	
+		}
 	}
 	
 	@Override
@@ -83,7 +86,7 @@ public class BookDetailFragment extends Fragment {
 		
 		if (file != null) {
 			file.close();
-		}
+		}		
 	}
 	
 	@Override
@@ -101,9 +104,12 @@ public class BookDetailFragment extends Fragment {
 			titleTextView.setText(book.getMetadata().getFirstTitle());
 			authorTextView.setText(parseAuthors(book.getMetadata().getAuthors()));
 			
-			Drawable thumbDrawable;
+			Drawable thumbDrawable = null;
 			try {
-				thumbDrawable = Drawable.createFromStream(book.getCoverImage().getInputStream(), "");
+				Resource coverImage = book.getCoverImage();
+				if (coverImage != null) {
+					thumbDrawable = Drawable.createFromStream(coverImage.getInputStream(), "");
+				}
 			} catch (IOException e) {
 				thumbDrawable = null;
 			}
@@ -116,6 +122,10 @@ public class BookDetailFragment extends Fragment {
 	
 	private String parseAuthors(List<Author> authors) {
 		String authorsString = "";
+		
+		if ((authors == null) || (authors.size() == 0)) {
+			return authorsString;
+		}
 		
 		for(Author author : authors) {
 			authorsString = authorsString.concat(author + ", ");
