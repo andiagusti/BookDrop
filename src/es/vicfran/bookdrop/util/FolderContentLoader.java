@@ -12,20 +12,22 @@ import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 
+import es.vicfran.bookdrop.models.DbxBook;
+
 /**
  * FileLoader class is an AsynTask that loads folder content asynchronously
  * @author Victor de Francisco Domingo
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class FolderContentLoader extends AsyncTaskLoader<List<Book>> {
+public class FolderContentLoader extends AsyncTaskLoader<List<DbxBook>> {
 	
 	public static final String TAG = FolderContentLoader.class.getName();
 	
 	private DbxAccountManager dbxAccountManager;
 	// Folder to list its content path
 	private DbxPath dbxPath;
-	private List<Book> books = null;
+	private List<DbxBook> dbxBooks = null;
 	
 	private Context context;
 	
@@ -41,8 +43,8 @@ public class FolderContentLoader extends AsyncTaskLoader<List<Book>> {
 	@Override
 	protected void onStartLoading() {
 		// If there are results, deliver them
-		if (books != null) {
-			deliverResult(books);
+		if (dbxBooks != null) {
+			deliverResult(dbxBooks);
 		}
 		
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
@@ -52,7 +54,7 @@ public class FolderContentLoader extends AsyncTaskLoader<List<Book>> {
 		}
 		
 		// If content has changed or there aren't results, force asynchronous load
-		if (takeContentChanged() || books == null) {
+		if (takeContentChanged() || dbxBooks == null) {
 			forceLoad();
 		}
 	}
@@ -71,34 +73,34 @@ public class FolderContentLoader extends AsyncTaskLoader<List<Book>> {
 	
 	@Override
 	protected void onReset() {
-		books = null;
+		dbxBooks = null;
 		onStopLoading();
 	}
 	
 	@Override
-	public List<Book> loadInBackground() {
+	public List<DbxBook> loadInBackground() {
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
 		
 		if (dbxFileSystem != null) {
 			try {
 				List<DbxFileInfo> files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
 				// Get book instances from dropbox file instances
-				books = Util.getBooks(context, files);
+				dbxBooks = Util.getDbxBooks(context, files);
 			} catch (DbxException exception) {
-				books = null;
+				dbxBooks = null;
 			}
 		}
 		
-		return books;
+		return dbxBooks;
 	}
 	
 	@Override
-	public void deliverResult(List<Book> files) {
+	public void deliverResult(List<DbxBook> files) {
 		if (isReset()) {
 			return;
 		}
 		
-		this.books = files;
+		this.dbxBooks = files;
 		
 		if (isStarted()) {
 			super.deliverResult(files);

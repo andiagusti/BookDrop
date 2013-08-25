@@ -3,12 +3,10 @@ package es.vicfran.bookdrop.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-
-import com.dropbox.sync.android.DbxFileInfo;
-
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.fragments.BookDetailFragment;
 import es.vicfran.bookdrop.fragments.BookListFragment.BookListCallbacks;
+import es.vicfran.bookdrop.models.DbxBook;
 
 /**
  * BookListActivity class represents main app screen
@@ -38,7 +36,7 @@ public class BookActivity extends FragmentActivity implements BookListCallbacks 
 			// Activity has only one fragment (list) 
 			// We can only show book list, when user wants book details, show them in another activity
 			Intent intent = new Intent(this, BookDetailActivity.class);
-			intent.putExtra(BookDetailFragment.ARG_FILE_INFO, bookId);
+			intent.putExtra(BookDetailFragment.ARG_BOOK_ID, bookId);
 			startActivity(intent);
 		}
 	}

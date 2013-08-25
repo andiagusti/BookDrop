@@ -1,6 +1,7 @@
 package es.vicfran.bookdrop.adapters;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -15,11 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import com.dropbox.sync.android.DbxFileInfo;
-
 import es.vicfran.bookdrop.R;
-import es.vicfran.bookdrop.util.Util;
+import es.vicfran.bookdrop.models.DbxBook;
 
 /**
  * BookListAdapter is the base adapter for the book list
@@ -34,14 +32,14 @@ public class BookListAdapter implements ListAdapter {
 	}
 	
 	// Source data with books
-	private static List<Book> books;
+	private static List<DbxBook> dbxBooks;
 	
 	private LayoutInflater inflater;
 	
 	private BookItemListCallbacks callbacks;
 	
-	public BookListAdapter(Context context, Fragment fragment, List<Book> books) {
-		this.books = books;
+	public BookListAdapter(Context context, Fragment fragment, List<DbxBook> books) {
+		this.dbxBooks = books;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -52,12 +50,12 @@ public class BookListAdapter implements ListAdapter {
 	
 	@Override
 	public int getCount() {
-		return books.size();
+		return dbxBooks.size();
 	}
 	
 	@Override
-	public Book getItem(int position) {
-		return books.get(position);
+	public DbxBook getItem(int position) {
+		return dbxBooks.get(position);
 	}
 	
 	@Override
@@ -85,6 +83,12 @@ public class BookListAdapter implements ListAdapter {
 	}
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
+		if ((dbxBooks.get(position) == null) || (dbxBooks.get(position).getBook() == null)) {
+			return null;
+		}
+		
+		final DbxBook dbxBook = dbxBooks.get(position);
+		
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.book_list_row, parent, false);
 			ViewHolder viewHolder = new ViewHolder();
@@ -94,12 +98,11 @@ public class BookListAdapter implements ListAdapter {
 			convertView.setTag(viewHolder);
 		}
 		
-		final Book book = books.get(position);
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
-		viewHolder.bookNameTextView.setText(book.getMetadata().getFirstTitle());
-		//viewHolder.dateTextView.setText(getDateString(book.getMetadata().getDates().get(0));
+		viewHolder.bookNameTextView.setText(dbxBook.getBook().getMetadata().getFirstTitle());
+		//viewHolder.dateTextView.setText(getDateString(dbxBook.getBook().getMetadata().getDates().get(0)));
 		
 		if (callbacks != null) {
 			convertView.setOnClickListener(new OnClickListener() {
@@ -138,7 +141,7 @@ public class BookListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return books.isEmpty();
+		return dbxBooks.isEmpty();
 	}
 
 	@Override
@@ -156,7 +159,11 @@ public class BookListAdapter implements ListAdapter {
 		
 	}
 	
-	public static List<Book> getBooks() {
-		return books;
+	public static List<DbxBook> getBooks() {
+		if (dbxBooks == null) {
+			dbxBooks = new ArrayList<DbxBook>();
+		}
+		
+		return dbxBooks;
 	}
 }

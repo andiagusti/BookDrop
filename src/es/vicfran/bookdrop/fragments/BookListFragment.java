@@ -24,13 +24,13 @@ import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.activities.SignActivity;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.adapters.BookListAdapter.BookItemListCallbacks;
+import es.vicfran.bookdrop.models.DbxBook;
 import es.vicfran.bookdrop.util.FolderContentLoader;
 import es.vicfran.bookdrop.util.Util;
 
@@ -40,13 +40,13 @@ import es.vicfran.bookdrop.util.Util;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<Book>>, 
+public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxBook>>, 
 			OnMenuItemClickListener, BookItemListCallbacks {
 	
 	// Interface for communication with holder activity
 	// Holder activity must implement it
 	public interface BookListCallbacks {
-		public void onBookDetail(int bookIndex);
+		public void onBookDetail(int bookId);
 	}
 	
 	public static final String TAG = BookListFragment.class.getName();
@@ -194,16 +194,16 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	// LoaderCallbacks
 	@Override
-	public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
+	public Loader<List<DbxBook>> onCreateLoader(int id, Bundle args) {
 		return new FolderContentLoader(getActivity(), dbxAccountManager, Util.APP_PATH);
 	}
 	
 	@Override
-	public void onLoaderReset(Loader<List<Book>> loader) {
+	public void onLoaderReset(Loader<List<DbxBook>> loader) {
 	}
 	
 	@Override
-	public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
+	public void onLoadFinished(Loader<List<DbxBook>> loader, List<DbxBook> data) {
 		progressBar.setVisibility(View.GONE);
 		
 		if (data.isEmpty()) {
