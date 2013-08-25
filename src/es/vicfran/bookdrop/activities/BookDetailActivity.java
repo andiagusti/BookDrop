@@ -15,7 +15,7 @@ public class BookDetailActivity extends FragmentActivity {
 		Bundle extras = getIntent().getExtras();
 				
 		getSupportFragmentManager().beginTransaction()
-		.add(R.id.book_detail, BookDetailFragment.buildBookDetailFragment(extras.getString(BookDetailFragment.ARG_FILE_INFO)))
+		.add(R.id.book_detail, BookDetailFragment.buildBookDetailFragment(extras.getInt(BookDetailFragment.ARG_BOOK_ID)))
 		.commit();
 	}
 }

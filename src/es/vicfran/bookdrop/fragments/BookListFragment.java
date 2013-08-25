@@ -2,6 +2,7 @@ package es.vicfran.bookdrop.fragments;
 
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,13 +24,13 @@ import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccount;
 import com.dropbox.sync.android.DbxAccountManager;
-import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.activities.SignActivity;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.adapters.BookListAdapter.BookItemListCallbacks;
+import es.vicfran.bookdrop.models.DbxBook;
 import es.vicfran.bookdrop.util.FolderContentLoader;
 import es.vicfran.bookdrop.util.Util;
 
@@ -39,13 +40,13 @@ import es.vicfran.bookdrop.util.Util;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxFileInfo>>, 
+public class BookListFragment extends Fragment implements DbxAccountManager.AccountListener, LoaderCallbacks<List<DbxBook>>, 
 			OnMenuItemClickListener, BookItemListCallbacks {
 	
 	// Interface for communication with holder activity
 	// Holder activity must implement it
 	public interface BookListCallbacks {
-		public void onBookDetail(DbxFileInfo dbxFileInfo);
+		public void onBookDetail(int bookId);
 	}
 	
 	public static final String TAG = BookListFragment.class.getName();
@@ -63,6 +64,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	private ProgressDialog progressDialog;
 	
 	private BookListCallbacks callbacks;
+	
+	private BookListAdapter bookListAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,8 +121,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		inflater.inflate(R.menu.main, menu);
 		
 		if (menu != null) {
-			menu.findItem(R.id.action_refresh).setOnMenuItemClickListener(this);
-			menu.findItem(R.id.action_settings).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_title_sort).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_date_sort).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_sign_out).setOnMenuItemClickListener(this);
 		}
 	}
@@ -127,11 +130,17 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	@Override
 	public boolean onMenuItemClick(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
-		case R.id.action_refresh:
-			// TODO
+		case R.id.action_date_sort:
+			if (bookListAdapter != null) {
+				bookListAdapter.dateSort();
+				bookListAdapter.notifyDataSetChanged();
+			}
 			break;
-		case R.id.action_settings:
-			// TODO
+		case R.id.action_title_sort:
+			if (bookListAdapter != null) {
+				bookListAdapter.titleSort();
+				bookListAdapter.notifyDataSetChanged();
+			}
 			break;
 		case R.id.action_sign_out:
 			// If there is any Dropbox account linked, unlink it
@@ -185,33 +194,34 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	
 	// LoaderCallbacks
 	@Override
-	public Loader<List<DbxFileInfo>> onCreateLoader(int id, Bundle args) {
+	public Loader<List<DbxBook>> onCreateLoader(int id, Bundle args) {
 		return new FolderContentLoader(getActivity(), dbxAccountManager, Util.APP_PATH);
 	}
 	
 	@Override
-	public void onLoaderReset(Loader<List<DbxFileInfo>> loader) {
+	public void onLoaderReset(Loader<List<DbxBook>> loader) {
 	}
 	
 	@Override
-	public void onLoadFinished(Loader<List<DbxFileInfo>> loader, List<DbxFileInfo> data) {
+	public void onLoadFinished(Loader<List<DbxBook>> loader, List<DbxBook> data) {
 		progressBar.setVisibility(View.GONE);
 		
 		if (data.isEmpty()) {
-			bookListView.setVisibility(View.GONE)
-;			emptyView.setVisibility(View.VISIBLE);
+			bookListView.setVisibility(View.GONE);			
+			emptyView.setVisibility(View.VISIBLE);
 		} else {
 			bookListView.setVisibility(View.VISIBLE);
 			emptyView.setVisibility(View.GONE);
 		}
 		
 		if (loader != null) {
-			bookListView.setAdapter(new BookListAdapter(getActivity(), this, data));
+			bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, this, data);
+			bookListView.setAdapter(bookListAdapter);
 		}
 	}
 	
 	@Override
-	public void onBookItemClick(DbxFileInfo dbxFileInfo) {
-		callbacks.onBookDetail(dbxFileInfo);
+	public void onBookItemClick(int bookId) {
+		callbacks.onBookDetail(bookId);
 	}
 }
