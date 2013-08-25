@@ -18,20 +18,12 @@
         android:id="@+id/lbl_name"
         style="@android:style/TextAppearance.Medium"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_toRightOf="@id/img_thumbnail"
         android:gravity="center_vertical|left"
-        android:textStyle="bold">
-    </TextView>
-    
-    <TextView
-        android:id="@+id/lbl_last_modified"
-        style="@android:style/TextAppearance.Small"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/lbl_name"
-        android:layout_toRightOf="@id/img_thumbnail"
-        android:gravity="center_vertical">
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end">
     </TextView>
 
 </RelativeLayout>

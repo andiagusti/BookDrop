@@ -1,8 +1,8 @@
 package es.vicfran.bookdrop.util;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import nl.siegmann.epublib.domain.Book;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
@@ -12,20 +12,22 @@ import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 
+import es.vicfran.bookdrop.models.DbxBook;
+
 /**
  * FileLoader class is an AsynTask that loads folder content asynchronously
  * @author Victor de Francisco Domingo
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
+public class FolderContentLoader extends AsyncTaskLoader<List<DbxBook>> {
 	
 	public static final String TAG = FolderContentLoader.class.getName();
 	
 	private DbxAccountManager dbxAccountManager;
 	// Folder to list its content path
 	private DbxPath dbxPath;
-	private List<DbxFileInfo> files = null;
+	private List<DbxBook> dbxBooks = null;
 	
 	private Context context;
 	
@@ -41,8 +43,8 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 	@Override
 	protected void onStartLoading() {
 		// If there are results, deliver them
-		if (files != null) {
-			deliverResult(files);
+		if (dbxBooks != null) {
+			deliverResult(dbxBooks);
 		}
 		
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
@@ -52,7 +54,7 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 		}
 		
 		// If content has changed or there aren't results, force asynchronous load
-		if (takeContentChanged() || files == null) {
+		if (takeContentChanged() || dbxBooks == null) {
 			forceLoad();
 		}
 	}
@@ -71,30 +73,34 @@ public class FolderContentLoader extends AsyncTaskLoader<List<DbxFileInfo>> {
 	
 	@Override
 	protected void onReset() {
-		files = null;
+		dbxBooks = null;
 		onStopLoading();
 	}
 	
 	@Override
-	public List<DbxFileInfo> loadInBackground() {
+	public List<DbxBook> loadInBackground() {
 		DbxFileSystem dbxFileSystem = Util.getFileSystem(context);
 		
 		if (dbxFileSystem != null) {
 			try {
-				files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
-			} catch (DbxException exception) {}
+				List<DbxFileInfo> files = Util.getFiles(dbxFileSystem.listFolder(dbxPath), Util.EBOOK_EXTENSION);
+				// Get book instances from dropbox file instances
+				dbxBooks = Util.getDbxBooks(context, files);
+			} catch (DbxException exception) {
+				dbxBooks = null;
+			}
 		}
 		
-		return files;
+		return dbxBooks;
 	}
 	
 	@Override
-	public void deliverResult(List<DbxFileInfo> files) {
+	public void deliverResult(List<DbxBook> files) {
 		if (isReset()) {
 			return;
 		}
 		
-		this.files = files;
+		this.dbxBooks = files;
 		
 		if (isStarted()) {
 			super.deliverResult(files);

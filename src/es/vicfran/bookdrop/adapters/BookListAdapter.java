@@ -1,6 +1,8 @@
 package es.vicfran.bookdrop.adapters;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -11,14 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-
-import com.dropbox.sync.android.DbxFileInfo;
-
 import es.vicfran.bookdrop.R;
-import es.vicfran.bookdrop.util.Util;
+import es.vicfran.bookdrop.models.DbxBook;
 
 /**
  * BookListAdapter is the base adapter for the book list
@@ -26,20 +25,23 @@ import es.vicfran.bookdrop.util.Util;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class BookListAdapter implements ListAdapter {
+public class BookListAdapter extends ArrayAdapter<DbxBook> {
 	
 	public interface BookItemListCallbacks {
-		public void onBookItemClick(DbxFileInfo dbxFileInfo);
+		public void onBookItemClick(int bookId);
 	}
-	
-	private List<DbxFileInfo> files;
+		
+	// Source data with books
+	private static List<DbxBook> dbxBooks;
 	
 	private LayoutInflater inflater;
 	
 	private BookItemListCallbacks callbacks;
 	
-	public BookListAdapter(Context context, Fragment fragment, List<DbxFileInfo> files) {
-		this.files = files;
+	public BookListAdapter(Context context, int resource, Fragment fragment, List<DbxBook> books) {
+		super(context, resource, books);
+		
+		this.dbxBooks = books;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
@@ -50,12 +52,12 @@ public class BookListAdapter implements ListAdapter {
 	
 	@Override
 	public int getCount() {
-		return files.size();
+		return dbxBooks.size();
 	}
 	
 	@Override
-	public DbxFileInfo getItem(int position) {
-		return files.get(position);
+	public DbxBook getItem(int position) {
+		return dbxBooks.get(position);
 	}
 	
 	@Override
@@ -82,28 +84,31 @@ public class BookListAdapter implements ListAdapter {
 		public TextView dateTextView;
 	}
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
+		if ((dbxBooks.get(position) == null) || (dbxBooks.get(position).getBook() == null)) {
+			return null;
+		}
+		
+		final DbxBook dbxBook = dbxBooks.get(position);
+		
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.book_list_row, parent, false);
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.bookThumbnailImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
 			viewHolder.bookNameTextView = (TextView) convertView.findViewById(R.id.lbl_name);
-			viewHolder.dateTextView = (TextView) convertView.findViewById(R.id.lbl_last_modified);
 			convertView.setTag(viewHolder);
 		}
 		
-		final DbxFileInfo file = files.get(position);
 		// Get View holder from convert view with view references
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
-		viewHolder.bookNameTextView.setText(Util.getFileName(file.path.getName()));
-		viewHolder.dateTextView.setText(getDateString(file.modifiedTime));
+		viewHolder.bookNameTextView.setText(dbxBook.getBook().getMetadata().getFirstTitle());
 		
 		if (callbacks != null) {
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					callbacks.onBookItemClick(file);
+					callbacks.onBookItemClick(position);
 				}
 			});
 		}
@@ -136,7 +141,7 @@ public class BookListAdapter implements ListAdapter {
 
 	@Override
 	public boolean isEmpty() {
-		return files.isEmpty();
+		return dbxBooks.isEmpty();
 	}
 
 	@Override
@@ -148,5 +153,21 @@ public class BookListAdapter implements ListAdapter {
 		DateFormat format = DateFormat.getInstance();
 		
 		return format.format(date);
+	}
+	
+	public void dateSort() {
+		Collections.sort(dbxBooks, DbxBook.dateComparator);
+	}
+	
+	public void titleSort() {
+		Collections.sort(dbxBooks, DbxBook.titleComparator);
+	}
+	
+	public static List<DbxBook> getBooks() {
+		if (dbxBooks == null) {
+			dbxBooks = new ArrayList<DbxBook>();
+		}
+		
+		return dbxBooks;
 	}
 }
