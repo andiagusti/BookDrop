@@ -3,7 +3,6 @@
 
     <!-- Common -->
     <string name="app_name">BookDrop</string>
-    <string name="hello_world">Hello world!</string>
     <string name="service_error">Ops! There have been a problem, please try again later</string>
     <string name="progress_text">Please, wait a moment</string>
     <string name="account_error">Error : there isn\'t any Dropbox account linked</string>
@@ -26,10 +25,5 @@
     <!-- Book detail -->
     <string name="title_content_description">Title</string>
     <string name="author_content_description">Author</string>
-    <string name="thumb_not_found_error">Ops! File doesn\'t exists</string>
-    <string name="thumb_not_file_error">Ops! This is a folder</string>
-    <string name="thumb_not_available_error">Ops! Thumbnail not available</string>
-    <string name="thumb_error">Ops! There have been a problem with the thumbnail</string>
-
 
 </resources>
