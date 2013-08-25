@@ -2,10 +2,10 @@ package es.vicfran.bookdrop.adapters;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import nl.siegmann.epublib.domain.Book;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.support.v4.app.Fragment;
@@ -13,8 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.models.DbxBook;
@@ -25,12 +25,12 @@ import es.vicfran.bookdrop.models.DbxBook;
  * @date 08/21/2013
  * @email victor_defran@yahoo.es
  */
-public class BookListAdapter implements ListAdapter {
+public class BookListAdapter extends ArrayAdapter<DbxBook> {
 	
 	public interface BookItemListCallbacks {
 		public void onBookItemClick(int bookId);
 	}
-	
+		
 	// Source data with books
 	private static List<DbxBook> dbxBooks;
 	
@@ -38,7 +38,9 @@ public class BookListAdapter implements ListAdapter {
 	
 	private BookItemListCallbacks callbacks;
 	
-	public BookListAdapter(Context context, Fragment fragment, List<DbxBook> books) {
+	public BookListAdapter(Context context, int resource, Fragment fragment, List<DbxBook> books) {
+		super(context, resource, books);
+		
 		this.dbxBooks = books;
 		
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -94,7 +96,6 @@ public class BookListAdapter implements ListAdapter {
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder.bookThumbnailImageView = (ImageView) convertView.findViewById(R.id.img_thumbnail);
 			viewHolder.bookNameTextView = (TextView) convertView.findViewById(R.id.lbl_name);
-			viewHolder.dateTextView = (TextView) convertView.findViewById(R.id.lbl_last_modified);
 			convertView.setTag(viewHolder);
 		}
 		
@@ -102,7 +103,6 @@ public class BookListAdapter implements ListAdapter {
 		ViewHolder viewHolder = (ViewHolder) convertView.getTag();
 		// TODO : Book thumbnail
 		viewHolder.bookNameTextView.setText(dbxBook.getBook().getMetadata().getFirstTitle());
-		//viewHolder.dateTextView.setText(getDateString(dbxBook.getBook().getMetadata().getDates().get(0)));
 		
 		if (callbacks != null) {
 			convertView.setOnClickListener(new OnClickListener() {
@@ -156,7 +156,11 @@ public class BookListAdapter implements ListAdapter {
 	}
 	
 	public void dateSort() {
-		
+		Collections.sort(dbxBooks, DbxBook.dateComparator);
+	}
+	
+	public void titleSort() {
+		Collections.sort(dbxBooks, DbxBook.titleComparator);
 	}
 	
 	public static List<DbxBook> getBooks() {

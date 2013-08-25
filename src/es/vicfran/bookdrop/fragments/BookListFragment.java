@@ -121,9 +121,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		inflater.inflate(R.menu.main, menu);
 		
 		if (menu != null) {
-			menu.findItem(R.id.action_refresh).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_title_sort).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_date_sort).setOnMenuItemClickListener(this);
-			menu.findItem(R.id.action_settings).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_sign_out).setOnMenuItemClickListener(this);
 		}
 	}
@@ -131,16 +130,17 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	@Override
 	public boolean onMenuItemClick(MenuItem menuItem) {
 		switch(menuItem.getItemId()) {
-		case R.id.action_refresh:
-			// TODO
-			break;
 		case R.id.action_date_sort:
 			if (bookListAdapter != null) {
 				bookListAdapter.dateSort();
+				bookListAdapter.notifyDataSetChanged();
 			}
 			break;
-		case R.id.action_settings:
-			// TODO
+		case R.id.action_title_sort:
+			if (bookListAdapter != null) {
+				bookListAdapter.titleSort();
+				bookListAdapter.notifyDataSetChanged();
+			}
 			break;
 		case R.id.action_sign_out:
 			// If there is any Dropbox account linked, unlink it
@@ -215,7 +215,7 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		}
 		
 		if (loader != null) {
-			bookListAdapter = new BookListAdapter(getActivity(), this, data);
+			bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, this, data);
 			bookListView.setAdapter(bookListAdapter);
 		}
 	}
