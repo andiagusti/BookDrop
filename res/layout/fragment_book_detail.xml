@@ -8,8 +8,19 @@
     <TextView
         android:id="@+id/lbl_path"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
     </TextView>
+    
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:contentDescription="@string/img_content_description"
+        android:src="@drawable/ic_launcher">
+    </ImageView>
     
 
 </LinearLayout>

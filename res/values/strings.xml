@@ -20,6 +20,12 @@
     <!-- Book list -->
     <string name="empty_list">No eBooks found</string>
     <string name="img_content_description">Book thumbnail</string>
+    
+    <!-- Book detail -->
+    <string name="thumb_not_found_error">Ops! File doesn\'t exists</string>
+    <string name="thumb_not_file_error">Ops! This is a folder</string>
+    <string name="thumb_not_available_error">Ops! Thumbnail not available</string>
+    <string name="thumb_error">Ops! There have been a problem with the thumbnail</string>
 
 
 </resources>
