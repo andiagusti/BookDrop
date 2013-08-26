@@ -5,7 +5,17 @@ import java.util.Comparator;
 import nl.siegmann.epublib.domain.Book;
 
 import com.dropbox.sync.android.DbxPath;
+/**
+ * This class uses Paul Siegmann's library for epub management under GNU Lesser General Public License.
+ * @url http://www.siegmann.nl/epublib
+ */
 
+/**
+ * DbxBook model class holds together a Book (epub) and its path in Dropbox (DbxPath)
+ * @author Victor de Francisco Domingo
+ * @date 08/25/2013
+ * @email victor_defran@yahoo.es
+ */
 public class DbxBook {
 	
 	private Book book;

@@ -5,6 +5,12 @@ import android.support.v4.app.FragmentActivity;
 import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.fragments.BookDetailFragment;
 
+/**
+ * BookDetailActivity holds BookDetailFragment
+ * @author Victor de Francisco Domingo
+ * @date 08/24/2013
+ * @email victor_defran@yahoo.es
+ */
 public class BookDetailActivity extends FragmentActivity {
 	
 	@Override

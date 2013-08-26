@@ -1,6 +1,5 @@
 package es.vicfran.bookdrop.fragments;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.app.Activity;
@@ -27,6 +26,7 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxFileSystem;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.activities.AboutActivity;
 import es.vicfran.bookdrop.activities.SignActivity;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.adapters.BookListAdapter.BookItemListCallbacks;
@@ -123,6 +123,7 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		if (menu != null) {
 			menu.findItem(R.id.action_title_sort).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_date_sort).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_about).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_sign_out).setOnMenuItemClickListener(this);
 		}
 	}
@@ -139,6 +140,10 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 			if (bookListAdapter != null) {
 				bookListAdapter.sort(DbxBook.titleComparator);
 			}
+			break;
+		case R.id.action_about:
+			Intent intent = new Intent(getActivity(), AboutActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.action_sign_out:
 			// If there is any Dropbox account linked, unlink it

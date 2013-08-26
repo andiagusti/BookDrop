@@ -18,11 +18,15 @@
     <string name="action_sign_out">Salir</string>
     
     <!-- Book list -->
-    <string name="empty_list">No hay eBooks</string>
+    <string name="empty_list">No hay eBooks en Aplicaciones/BookDrop/ebooks/</string>
     <string name="img_content_description">Carátula de eBook</string>
     
     <!-- Book detail -->
     <string name="title_content_description">Título</string>
     <string name="author_content_description">Autor</string>
+    
+    <!-- About -->
+    <string name="about_label">Acerca de</string>
+    <string name="about">Esta app lee eBooks de la cuenta Dropbox del usuario y los muestra. \nLos eBooks deben estar alojados en la carpeta Aplicaciones/BookDrop/ebooks/ \n\n\n\n Author: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>    
     
 </resources>
