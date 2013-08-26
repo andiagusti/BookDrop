@@ -2,7 +2,6 @@ package es.vicfran.bookdrop.adapters;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -30,52 +29,25 @@ public class BookListAdapter extends ArrayAdapter<DbxBook> {
 	public interface BookItemListCallbacks {
 		public void onBookItemClick(int bookId);
 	}
-		
-	// Source data with books
-	private static List<DbxBook> dbxBooks;
-	
+
 	private LayoutInflater inflater;
 	
 	private BookItemListCallbacks callbacks;
 	
-	public BookListAdapter(Context context, int resource, Fragment fragment, List<DbxBook> books) {
+	private static List<DbxBook> list;
+	
+	public BookListAdapter(Context context, int resource, int textViewResource, List<DbxBook> books, Fragment fragment) {
 		super(context, resource, books);
 		
-		this.dbxBooks = books;
-		
+		this.list = books;
+				
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		if (fragment instanceof BookItemListCallbacks) {
 			callbacks = (BookItemListCallbacks) fragment;
 		}
 	}
-	
-	@Override
-	public int getCount() {
-		return dbxBooks.size();
-	}
-	
-	@Override
-	public DbxBook getItem(int position) {
-		return dbxBooks.get(position);
-	}
-	
-	@Override
-	public int getViewTypeCount() {
-		return 1;
-	}
-	@Override
-	public int getItemViewType(int position) {
-		// Every row has the same layout, don't need to worry about view types
-		return 0;
-	}
-	
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-	
-	
+
 	// View holder pattern avoids findViewById() calls for reused convert views.
 	// This is faster than traditional method (~15% faster).
 	static class ViewHolder {
@@ -85,11 +57,11 @@ public class BookListAdapter extends ArrayAdapter<DbxBook> {
 	}
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		if ((dbxBooks.get(position) == null) || (dbxBooks.get(position).getBook() == null)) {
+		if ((getItem(position) == null) || (getItem(position).getBook() == null)) {
 			return null;
 		}
 		
-		final DbxBook dbxBook = dbxBooks.get(position);
+		final DbxBook dbxBook = getItem(position);
 		
 		if (convertView == null) {
 			convertView = inflater.inflate(R.layout.book_list_row, parent, false);
@@ -140,34 +112,21 @@ public class BookListAdapter extends ArrayAdapter<DbxBook> {
 	}
 
 	@Override
-	public boolean isEmpty() {
-		return dbxBooks.isEmpty();
-	}
-
-	@Override
 	public boolean areAllItemsEnabled() {
 		return true;
 	}
-	
+
 	private String getDateString(Date date) {
 		DateFormat format = DateFormat.getInstance();
 		
 		return format.format(date);
 	}
 	
-	public void dateSort() {
-		Collections.sort(dbxBooks, DbxBook.dateComparator);
-	}
-	
-	public void titleSort() {
-		Collections.sort(dbxBooks, DbxBook.titleComparator);
-	}
-	
 	public static List<DbxBook> getBooks() {
-		if (dbxBooks == null) {
-			dbxBooks = new ArrayList<DbxBook>();
+		if (list == null) {
+			list = new ArrayList<DbxBook>();
 		}
 		
-		return dbxBooks;
+		return list;
 	}
 }

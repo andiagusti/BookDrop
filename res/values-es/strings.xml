@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!-- Common -->
+    <string name="app_name">BookDrop</string>
+    <string name="service_error">Ups! Ha habido un problema, por favor inténtalo de nuevo más tarde</string>
+    <string name="progress_text">Por favor, espera un momento</string>
+    <string name="account_error">Error : no hay ninguna cuenta de Dropbox vinculada</string>
+    <string name="unauthorized_error">No estás autorizado para acceder al contenido de este directorio</string>
+
+    <!-- Sign in -->
+    <string name="sign">Entrar</string>
+    <string name="sign_text">No estás logueado con ninguna cuenta Dropbox</string>
+
+    <!-- Menu -->
+    <string name="action_date_sort">Ordenar por fecha</string>
+    <string name="action_title_sort">Ordenar por título</string>
+    <string name="action_sign_out">Salir</string>
+    
+    <!-- Book list -->
+    <string name="empty_list">No hay eBooks en Aplicaciones/BookDrop/ebooks/</string>
+    <string name="img_content_description">Carátula de eBook</string>
+    
+    <!-- Book detail -->
+    <string name="title_content_description">Título</string>
+    <string name="author_content_description">Autor</string>
+    
+    <!-- About -->
+    <string name="about_label">Acerca de</string>
+    <string name="about">Esta app lee eBooks de la cuenta Dropbox del usuario y los muestra. \nLos eBooks deben estar alojados en la carpeta Aplicaciones/BookDrop/ebooks/ \n\n\n\n Autor: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>    
+    
+</resources>

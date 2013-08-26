@@ -22,7 +22,18 @@ import es.vicfran.bookdrop.R;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.models.DbxBook;
 
+/**
+ * This class uses Paul Siegmann's library for epub management under GNU Lesser General Public License.
+ * @url http://www.siegmann.nl/epublib
+ */
 
+
+/**
+ * BookDetailFragment class shows book details inside a fragment
+ * @author Victor de Francisco Domingo
+ * @date 08/24/2013
+ * @email victor_defran@yahoo.es
+ */
 public class BookDetailFragment extends Fragment {
 	
 	private TextView titleTextView;
@@ -32,8 +43,6 @@ public class BookDetailFragment extends Fragment {
 	public static final String ARG_FILE_PATH = "es.vicfran.bookdrop.fragments:file_info";
 	public static final String ARG_BOOK_ID = "es.vicfran.bookdrop.fragments:book_id";
 	
-	private DbxPath dbxPath;
-	private DbxFile dbxFile;
 	private DbxBook dbxBook;
 	
 	public static BookDetailFragment buildBookDetailFragment(int bookId) {

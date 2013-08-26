@@ -18,6 +18,12 @@ import com.dropbox.sync.android.DbxPath;
 
 import es.vicfran.bookdrop.models.DbxBook;
 
+/**
+ * Utility class with some util data & methods
+ * @author Victor de Francisco Domingo
+ * @date 08/21/2013
+ * @email victor_defran@yahoo.es
+ */
 public final class Util {
 	// Private constructor to prevent against class instantiation
 	private Util() {}

@@ -9,7 +9,7 @@ import es.vicfran.bookdrop.fragments.BookListFragment.BookListCallbacks;
 import es.vicfran.bookdrop.models.DbxBook;
 
 /**
- * BookListActivity class represents main app screen
+ * BookActivity class represents main app screen
  * @author Victor de Francisco Domingo
  * @date 08/21/2013
  * @email victor_defran@yahoo.es

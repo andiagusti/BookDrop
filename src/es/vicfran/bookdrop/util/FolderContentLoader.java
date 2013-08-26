@@ -2,7 +2,6 @@ package es.vicfran.bookdrop.util;
 
 import java.util.List;
 
-import nl.siegmann.epublib.domain.Book;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 

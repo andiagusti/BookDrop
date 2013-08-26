@@ -2,7 +2,6 @@ package es.vicfran.bookdrop.fragments;
 
 import java.util.List;
 
-import nl.siegmann.epublib.domain.Book;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxFileSystem;
 
 import es.vicfran.bookdrop.R;
+import es.vicfran.bookdrop.activities.AboutActivity;
 import es.vicfran.bookdrop.activities.SignActivity;
 import es.vicfran.bookdrop.adapters.BookListAdapter;
 import es.vicfran.bookdrop.adapters.BookListAdapter.BookItemListCallbacks;
@@ -123,6 +123,7 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		if (menu != null) {
 			menu.findItem(R.id.action_title_sort).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_date_sort).setOnMenuItemClickListener(this);
+			menu.findItem(R.id.action_about).setOnMenuItemClickListener(this);
 			menu.findItem(R.id.action_sign_out).setOnMenuItemClickListener(this);
 		}
 	}
@@ -132,15 +133,17 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		switch(menuItem.getItemId()) {
 		case R.id.action_date_sort:
 			if (bookListAdapter != null) {
-				bookListAdapter.dateSort();
-				bookListAdapter.notifyDataSetChanged();
+				bookListAdapter.sort(DbxBook.dateComparator);
 			}
 			break;
 		case R.id.action_title_sort:
 			if (bookListAdapter != null) {
-				bookListAdapter.titleSort();
-				bookListAdapter.notifyDataSetChanged();
+				bookListAdapter.sort(DbxBook.titleComparator);
 			}
+			break;
+		case R.id.action_about:
+			Intent intent = new Intent(getActivity(), AboutActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.action_sign_out:
 			// If there is any Dropbox account linked, unlink it
@@ -183,7 +186,6 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	/*
 	 * CALLBACKS
 	 */
-	
 	// DbxCallbacks
 	@Override
 	public void onLinkedAccountChange(DbxAccountManager dbxAccountManager, DbxAccount dbxAccount) {
@@ -215,7 +217,8 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 		}
 		
 		if (loader != null) {
-			bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, this, data);
+			bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, R.id.lbl_name, data, this);
+			bookListAdapter.setNotifyOnChange(true);
 			bookListView.setAdapter(bookListAdapter);
 		}
 	}
