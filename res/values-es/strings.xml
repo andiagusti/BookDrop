@@ -27,6 +27,6 @@
     
     <!-- About -->
     <string name="about_label">Acerca de</string>
-    <string name="about">Esta app lee eBooks de la cuenta Dropbox del usuario y los muestra. \nLos eBooks deben estar alojados en la carpeta Aplicaciones/BookDrop/ebooks/ \n\n\n\n Author: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>    
+    <string name="about">Esta app lee eBooks de la cuenta Dropbox del usuario y los muestra. \nLos eBooks deben estar alojados en la carpeta Aplicaciones/BookDrop/ebooks/ \n\n\n\n Autor: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>    
     
 </resources>
