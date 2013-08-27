@@ -90,7 +90,7 @@ public final class Util {
 	 * Gets Book list from DbxFileInfo files
 	 */
 	public static List<DbxBook> getDbxBooks(Context context, List<DbxFileInfo> files) {
-		List<DbxBook> books = new ArrayList<DbxBook>(files.size());
+		List<DbxBook> books = new ArrayList<DbxBook>();
 		
 		for (DbxFileInfo dbxFileInfo : files) {
 			books.add(getDbxBook(context, dbxFileInfo));
