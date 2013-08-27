@@ -208,18 +208,18 @@ public class BookListFragment extends Fragment implements DbxAccountManager.Acco
 	public void onLoadFinished(Loader<List<DbxBook>> loader, List<DbxBook> data) {
 		progressBar.setVisibility(View.GONE);
 		
-		if (data.isEmpty()) {
+		if ((data == null || (data.isEmpty()))) {
 			bookListView.setVisibility(View.GONE);			
 			emptyView.setVisibility(View.VISIBLE);
 		} else {
 			bookListView.setVisibility(View.VISIBLE);
 			emptyView.setVisibility(View.GONE);
-		}
-		
-		if (loader != null) {
-			bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, R.id.lbl_name, data, this);
-			bookListAdapter.setNotifyOnChange(true);
-			bookListView.setAdapter(bookListAdapter);
+			
+			if (loader != null) {
+				bookListAdapter = new BookListAdapter(getActivity(), R.layout.book_list_row, R.id.lbl_name, data, this);
+				bookListAdapter.setNotifyOnChange(true);
+				bookListView.setAdapter(bookListAdapter);
+			}
 		}
 	}
 	
