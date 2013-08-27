@@ -20,7 +20,7 @@
     <string name="action_sign_out">Sign out</string>
     
     <!-- Book list -->
-    <string name="empty_list">No eBooks found at Applications/BookDrop/ebooks/</string>
+    <string name="empty_list">No eBooks found at Applications/BookDrop folder</string>
     <string name="img_content_description">Book thumbnail</string>
     
     <!-- Book detail -->
@@ -29,6 +29,6 @@
 
     <!-- About -->
     <string name="about_label">About</string>
-    <string name="about">This app reads eBooks from user\'s Dropbox account and shows it. \neBooks must be placed at Applications/BookDrop/ebooks/ folder \n\n\n\n Author: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>
+    <string name="about">This app reads eBooks from user\'s Dropbox account and shows it. \neBooks must be placed at Applications/BookDrop folder \n\n\n\n Author: Victor de Francisco Domingo (victor_defran@yahoo.es)</string>
     
 </resources>

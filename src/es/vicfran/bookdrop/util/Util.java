@@ -37,8 +37,7 @@ public final class Util {
 	private static final String APP_SECRET = "ny1yoknc71nkwfn";
 	
 	// Folder of this app on Dropbox account
-	public static final String APP_FOLDER = "ebooks";
-	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT, APP_FOLDER);
+	public static final DbxPath APP_PATH = new DbxPath(DbxPath.ROOT.toString());
 	
 	public static final String EBOOK_EXTENSION = "epub";
 	
